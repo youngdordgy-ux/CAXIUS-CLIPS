@@ -1,1405 +1,179 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050711">
-<title>CASSIUS CLIPSTUDIO — AI Video Studio</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050914">
+<title>CASSIUS CLIPSTUDIO | Creator Studio</title>
 <style>
-:root {
-  --bg: #050711;
-  --panel: #0c1222;
-  --panel2: #111b30;
-  --blue: #2463eb;
-  --blue2: #478bff;
-  --white: #f7f9ff;
-  --muted: #8998b5;
-  --border: #1c2a45;
-  --green: #39d98a;
-  --red: #ff647c;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background:
-    radial-gradient(ellipse at 50% -20%, #153b82 0%, transparent 42%),
-    var(--bg);
-  color: var(--white);
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-}
-
-button, input, select, textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-  border: 0;
-}
-
-.app {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background: #080d19;
-  border-right: 1px solid var(--border);
-  padding: 25px 17px;
-  position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 5;
-}
-
-.brand {
-  padding: 15px 10px 32px;
-}
-
-.brand-mark {
-  color: var(--blue2);
-  font-size: 48px;
-  font-weight: 1000;
-  letter-spacing: -5px;
-  text-shadow: 0 0 28px #2463eb99;
-}
-
-.brand-name {
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 1.8px;
-  margin-top: 3px;
-}
-
-.brand-sub {
-  font-size: 9px;
-  color: var(--muted);
-  letter-spacing: 3px;
-  margin-top: 7px;
-}
-
-.nav-label {
-  color: #61708c;
-  font-size: 10px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  padding: 15px 12px 10px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  color: #9aabc9;
-  padding: 14px 13px;
-  margin: 5px 0;
-  border-radius: 10px;
-  font-size: 13px;
-  text-decoration: none;
-  transition: .2s;
-}
-
-.nav-item:hover,
-.nav-item.active {
-  color: white;
-  background: linear-gradient(100deg, #1854c8, #18366f);
-}
-
-.sidebar-bottom {
-  position: absolute;
-  bottom: 25px;
-  left: 17px;
-  right: 17px;
-  background: #101a2c;
-  padding: 15px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-
-.sidebar-bottom strong {
-  font-size: 12px;
-}
-
-.sidebar-bottom p {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 7px;
-  line-height: 1.5;
-}
-
-.main {
-  margin-left: 250px;
-  width: calc(100% - 250px);
-  padding: 28px 34px 60px;
-  max-width: 1600px;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.topbar small {
-  color: var(--muted);
-  letter-spacing: 2px;
-  font-size: 10px;
-}
-
-.topbar h1 {
-  font-size: 24px;
-  margin-top: 6px;
-}
-
-.status-pill {
-  border: 1px solid #245b45;
-  color: var(--green);
-  background: #10251f;
-  padding: 9px 13px;
-  border-radius: 30px;
-  font-size: 11px;
-}
-
-.hero {
-  padding: 34px;
-  border: 1px solid #244b91;
-  border-radius: 20px;
-  background:
-    linear-gradient(110deg, #112b5b 0%, #0c1830 55%, #10182b 100%);
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 25px;
-}
-
-.hero::after {
-  content: "C";
-  position: absolute;
-  right: 25px;
-  top: -65px;
-  font-size: 260px;
-  line-height: 1;
-  font-weight: 1000;
-  color: #ffffff08;
-  pointer-events: none;
-}
-
-.hero-tag {
-  color: #8eb7ff;
-  font-size: 10px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  margin-bottom: 15px;
-}
-
-.hero h2 {
-  font-size: clamp(30px, 5vw, 53px);
-  line-height: 1.08;
-  max-width: 650px;
-  letter-spacing: -2px;
-}
-
-.hero h2 span {
-  color: #6da5ff;
-}
-
-.hero p {
-  color: #b2c3e0;
-  margin-top: 15px;
-  font-size: 13px;
-  line-height: 1.7;
-  max-width: 560px;
-}
-
-.hero-logo {
-  margin-top: 24px;
-  display: inline-block;
-  padding: 10px 15px;
-  border: 1px solid #5489ed;
-  border-radius: 8px;
-  color: #c8dcff;
-  font-weight: 900;
-  font-size: 11px;
-  letter-spacing: 2px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.stat {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 19px;
-}
-
-.stat small {
-  color: var(--muted);
-  font-size: 10px;
-  letter-spacing: 1px;
-}
-
-.stat strong {
-  display: block;
-  font-size: 21px;
-  margin-top: 9px;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 30px 0 14px;
-}
-
-.section-title h3 {
-  font-size: 16px;
-}
-
-.section-title span {
-  color: var(--muted);
-  font-size: 10px;
-}
-
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(270px, .8fr);
-  gap: 17px;
-}
-
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 21px;
-  min-width: 0;
-  animation: appear .5s ease both;
-}
-
-@keyframes appear {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.card h3 {
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-.card-desc {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.6;
-  margin-bottom: 17px;
-}
-
-.field-label {
-  display: block;
-  color: #aebbd2;
-  font-size: 11px;
-  margin: 15px 0 8px;
-}
-
-input, select, textarea {
-  width: 100%;
-  background: #080e1b;
-  border: 1px solid #263753;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  outline: none;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--blue2);
-}
-
-input[type="color"] {
-  height: 43px;
-  padding: 5px;
-}
-
-input[type="range"] {
-  padding: 0;
-  accent-color: var(--blue2);
-}
-
-.btn {
-  background: linear-gradient(110deg, #1854c8, #347df4);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: bold;
-  transition: .2s;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 7px 22px #2463eb55;
-}
-
-.btn.secondary {
-  background: #17243a;
-  border: 1px solid #314969;
-}
-
-.btn.full {
-  width: 100%;
-  margin-top: 12px;
-}
-
-.btn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.file-drop {
-  border: 1px dashed #3a5f9b;
-  background: #0a1427;
-  padding: 25px 15px;
-  border-radius: 11px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.file-drop strong {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
-.file-drop span {
-  color: var(--muted);
-  font-size: 10px;
-}
-
-.file-drop input {
-  display: none;
-}
-
-.video-box {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #02040a;
-  border: 1px solid #263958;
-  border-radius: 11px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.video-box video,
-.video-box iframe {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border: 0;
-}
-
-.video-placeholder {
-  text-align: center;
-  color: #637492;
-  padding: 20px;
-}
-
-.video-placeholder strong {
-  display: block;
-  font-size: 35px;
-  color: #285fc2;
-  margin-bottom: 10px;
-}
-
-.video-placeholder span {
-  font-size: 11px;
-}
-
-.caption-overlay {
-  position: absolute;
-  left: 5%;
-  right: 5%;
-  bottom: 12%;
-  text-align: center;
-  font-weight: 1000;
-  font-size: 25px;
-  text-transform: uppercase;
-  line-height: 1.2;
-  pointer-events: none;
-  text-shadow:
-    2px 2px 2px #000,
-    -2px -2px 2px #000,
-    0 4px 8px #000;
-  overflow-wrap: anywhere;
-}
-
-.caption-overlay.top {
-  bottom: auto;
-  top: 12%;
-}
-
-.caption-overlay.middle {
-  bottom: auto;
-  top: 45%;
-}
-
-.caption-overlay span {
-  display: inline-block;
-  margin: 0 4px;
-}
-
-.message {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 12px;
-  line-height: 1.6;
-  min-height: 18px;
-}
-
-.message.good {
-  color: var(--green);
-}
-
-.message.bad {
-  color: var(--red);
-}
-
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.caption-preview {
-  min-height: 85px;
-  background: #050914;
-  border: 1px solid #263753;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 15px;
-  font-size: 22px;
-  font-weight: 1000;
-  text-transform: uppercase;
-  overflow-wrap: anywhere;
-}
-
-.export-card {
-  background: linear-gradient(130deg, #11264a, #0c1425);
-  border-color: #315b9e;
-}
-
-.progress-track {
-  width: 100%;
-  height: 7px;
-  background: #1c2b42;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-top: 14px;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #2463eb, #6da5ff);
-  transition: width .2s;
-}
-
-footer {
-  text-align: center;
-  color: #64738d;
-  font-size: 10px;
-  padding: 35px 10px;
-  letter-spacing: 1px;
-}
-
-.mobile-menu {
-  display: none;
-}
-
-@media(max-width: 950px) {
-  .sidebar {
-    width: 205px;
-  }
-  .main {
-    margin-left: 205px;
-    width: calc(100% - 205px);
-    padding: 22px;
-  }
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media(max-width: 650px) {
-  .sidebar {
-    display: none;
-  }
-  .main {
-    margin-left: 0;
-    width: 100%;
-    padding: 17px;
-  }
-  .mobile-menu {
-    display: block;
-    color: var(--blue2);
-    font-size: 12px;
-    margin-bottom: 15px;
-    letter-spacing: 2px;
-  }
-  .hero {
-    padding: 25px 20px;
-  }
-  .stats {
-    gap: 8px;
-  }
-  .stat {
-    padding: 13px 10px;
-  }
-  .stat strong {
-    font-size: 16px;
-  }
-  .stat small {
-    font-size: 8px;
-  }
-  .topbar h1 {
-    font-size: 20px;
-  }
-}
+:root{--bg:#050914;--panel:#0c1425;--panel2:#111e34;--line:#203454;--blue:#2463eb;--bright:#65a0ff;--text:#f4f7ff;--muted:#94a5c2;--green:#45d69a;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -25%,#173b7a 0,transparent 45%),var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.app{display:flex;min-height:100vh}.side{width:235px;position:fixed;inset:0 auto 0 0;background:#080e1b;border-right:1px solid var(--line);padding:22px 16px;z-index:3}.logo{padding:8px 10px 28px}.logo-mark{font-size:58px;font-weight:1000;line-height:.9;letter-spacing:-7px;color:var(--bright);text-shadow:0 0 30px #2463eb99}.logo-name{font-size:17px;font-weight:900;letter-spacing:2px;margin-top:8px}.logo-sub{font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:5px}.nav-label{font-size:9px;color:#627695;letter-spacing:2px;padding:15px 10px 8px}.nav a{display:block;padding:12px 11px;margin:4px 0;border-radius:9px;color:#a9bad5;text-decoration:none;font-size:12px}.nav a:hover,.nav a.active{background:#15356b;color:white}.side-note{position:absolute;bottom:20px;left:16px;right:16px;border:1px solid var(--line);background:#101a2d;border-radius:10px;padding:13px;font-size:10px;color:var(--muted);line-height:1.6}.main{margin-left:235px;width:calc(100% - 235px);max-width:1500px;padding:25px 30px 55px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}.eyebrow{font-size:9px;color:var(--muted);letter-spacing:2px}.top h1{font-size:23px;margin:6px 0 0}.pill{border:1px solid #285d4a;background:#10251e;color:var(--green);padding:8px 11px;border-radius:30px;font-size:10px}.hero{border:1px solid #28539a;border-radius:18px;padding:29px;background:linear-gradient(110deg,#122e61,#0c1930 65%,#10182a);position:relative;overflow:hidden;margin-bottom:18px}.hero:after{content:"C";position:absolute;right:20px;top:-70px;font-size:270px;font-weight:1000;color:#ffffff08}.hero .eyebrow{color:#9fc2ff}.hero h2{font-size:clamp(30px,5vw,50px);line-height:1.04;letter-spacing:-2px;margin:12px 0;max-width:650px}.hero h2 span{color:#75aaff}.hero p{font-size:12px;color:#c0cee4;line-height:1.7;max-width:580px}.hero-brand{display:inline-block;margin-top:12px;border:1px solid #5488dc;border-radius:7px;padding:9px 12px;font-size:10px;letter-spacing:2px;font-weight:900}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 25px}.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px;min-width:0}.stat small{font-size:9px;color:var(--muted);letter-spacing:1px}.stat strong{display:block;font-size:19px;margin-top:8px}.section{display:flex;justify-content:space-between;align-items:center;margin:25px 0 12px}.section h3{font-size:14px;margin:0}.section span{font-size:9px;color:var(--muted);letter-spacing:1px}.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);gap:14px}.card h3{font-size:13px;margin:0 0 7px}.desc{font-size:10px;color:var(--muted);line-height:1.6;margin:0 0 14px}.label{display:block;font-size:10px;color:#b5c3d9;margin:13px 0 7px}input,textarea,select{width:100%;background:#070e1b;border:1px solid #2a3d5b;border-radius:8px;color:white;padding:11px;outline:none;font-size:12px}input:focus,textarea:focus,select:focus{border-color:var(--bright)}textarea{resize:vertical}.btn{background:linear-gradient(110deg,#1854c8,#347df4);border:0;border-radius:8px;color:white;padding:11px 14px;font-size:10px;font-weight:800}.btn:hover{filter:brightness(1.13)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.alt{background:#172640;border:1px solid #344b70}.btn.danger{background:#512033;border:1px solid #8c3850}.full{width:100%;margin-top:10px}.drop{display:block;border:1px dashed #42669d;border-radius:10px;padding:20px;text-align:center;background:#0a1427;cursor:pointer}.drop b{display:block;font-size:12px;margin-bottom:6px}.drop span{font-size:9px;color:var(--muted)}.drop input{display:none}.video-frame{aspect-ratio:16/9;background:#02050b;border:1px solid #263958;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}.video-frame video,.video-frame iframe{width:100%;height:100%;object-fit:contain;border:0}.placeholder{text-align:center;color:#7284a2;font-size:10px}.placeholder b{display:block;font-size:36px;color:#3978e9;margin-bottom:8px}.msg{font-size:10px;color:var(--muted);line-height:1.6;margin-top:10px;min-height:15px}.msg.good{color:var(--green)}.msg.bad{color:var(--red)}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.clip-list{display:grid;gap:8px;margin-top:12px}.clip{border:1px solid #263b5c;background:#091222;border-radius:9px;padding:11px;display:flex;align-items:center;justify-content:space-between;gap:10px}.clip strong{font-size:11px}.clip small{display:block;color:var(--muted);font-size:9px;margin-top:4px}.clip-actions{display:flex;gap:5px}.clip-actions button{padding:7px 9px;font-size:9px}.caption-demo{min-height:75px;background:#050914;border:1px solid #293d5d;border-radius:9px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-size:22px;font-weight:900;text-transform:uppercase;overflow-wrap:anywhere}.timeline{height:12px;border-radius:20px;background:#1b2b44;overflow:hidden;margin:12px 0}.progress{height:100%;width:0;background:linear-gradient(90deg,#2463eb,#75aaff);transition:width .15s}.hint{border-left:3px solid #397be9;padding:9px 11px;background:#0d1a30;color:#aebfda;font-size:10px;line-height:1.6;border-radius:0 7px 7px 0;margin-top:12px}.hidden{display:none!important}footer{text-align:center;color:#667895;font-size:9px;letter-spacing:1px;padding:30px 0}.mobile-brand{display:none}
+@media(max-width:900px){.side{width:195px}.main{margin-left:195px;width:calc(100% - 195px);padding:20px}.grid{grid-template-columns:1fr}}
+@media(max-width:620px){.side{display:none}.main{margin:0;width:100%;padding:15px}.mobile-brand{display:block;color:#75aaff;font-size:10px;letter-spacing:2px;margin-bottom:13px}.hero{padding:22px 18px}.stats{gap:7px}.stat{padding:12px 9px}.stat strong{font-size:15px}.stat small{font-size:8px}.top h1{font-size:19px}.section span{font-size:8px}}
 </style>
 </head>
-
 <body>
 <div class="app">
-
-<aside class="sidebar">
-  <div class="brand">
-    <div class="brand-mark">C</div>
-    <div class="brand-name">CASSIUS</div>
-    <div class="brand-sub">CLIPSTUDIO</div>
-  </div>
-
-  <div class="nav-label">WORKSPACE</div>
-  <a class="nav-item active" href="#dashboard">▦ Dashboard</a>
-  <a class="nav-item" href="#video">▶ Video editor</a>
-  <a class="nav-item" href="#captions">✦ Animated captions</a>
-  <a class="nav-item" href="#export">⇩ Export studio</a>
-
-  <div class="nav-label">INFORMATION</div>
-  <a class="nav-item" href="#about">ⓘ About the studio</a>
-
-  <div class="sidebar-bottom">
-    <strong>CASSIUS STUDIO</strong>
-    <p>Creative tools for creators. Built to make video editing more accessible.</p>
-  </div>
+<aside class="side">
+  <div class="logo"><div class="logo-mark">C</div><div class="logo-name">CASSIUS</div><div class="logo-sub">CLIPSTUDIO</div></div>
+  <div class="nav-label">STUDIO</div>
+  <nav class="nav">
+    <a class="active" href="#dashboard">▦ Dashboard</a>
+    <a href="#source">▶ Video source</a>
+    <a href="#auto">✦ Highlight assistant</a>
+    <a href="#manual">✂ Manual editor</a>
+    <a href="#captions">▤ Caption studio</a>
+    <a href="#export">⇩ Export</a>
+  </nav>
+  <div class="side-note"><b style="color:white">CREATOR FIRST</b><br>Import your own footage, discover moments, shape your clips and export from one workspace.</div>
 </aside>
-
 <main class="main" id="dashboard">
-
-  <div class="mobile-menu">CASSIUS / CLIPSTUDIO</div>
-
-  <header class="topbar">
-    <div>
-      <small>CREATOR WORKSPACE</small>
-      <h1>Video editing dashboard</h1>
-    </div>
-    <div class="status-pill">● STUDIO READY</div>
-  </header>
-
+  <div class="mobile-brand">CASSIUS / CLIPSTUDIO</div>
+  <header class="top"><div><div class="eyebrow">CREATOR WORKSPACE</div><h1>AI Video Creator Studio</h1></div><div class="pill">● LOCAL STUDIO READY</div></header>
   <section class="hero">
-    <div class="hero-tag">WELCOME TO THE NEXT GENERATION</div>
-    <h2>CREATE. EDIT.<br><span>MAKE IT VIRAL.</span></h2>
-    <p>
-      Turn your own videos into engaging clips with animated captions,
-      simple editing controls and a creator-focused workspace.
-    </p>
-    <div class="hero-logo">CASSIUS CLIPSTUDIO</div>
+    <div class="eyebrow">YOUR IDEAS. YOUR MOMENTS. YOUR CLIPS.</div>
+    <h2>CREATE. CUT.<br><span>MAKE IT COUNT.</span></h2>
+    <p>Find promising moments, make your own edits, animate captions and prepare vertical clips for your audience.</p>
+    <div class="hero-brand">CASSIUS CLIPSTUDIO</div>
   </section>
-
   <section class="stats">
-    <div class="stat">
-      <small>VIDEO WORKSPACE</small>
-      <strong id="videoStat">EMPTY</strong>
+    <div class="stat"><small>VIDEO SOURCE</small><strong id="sourceStat">NOT LOADED</strong></div>
+    <div class="stat"><small>SUGGESTED CLIPS</small><strong id="clipStat">0</strong></div>
+    <div class="stat"><small>EDITOR MODE</small><strong id="modeStat">READY</strong></div>
+  </section>
+
+  <div class="section" id="source"><h3>01 / VIDEO SOURCE</h3><span>LINK PREVIEW OR UPLOAD</span></div>
+  <section class="grid">
+    <div class="card">
+      <h3>Bring your video into the studio</h3>
+      <p class="desc">Paste a YouTube link for an embedded preview, or upload a video file you own or have permission to edit.</p>
+      <label class="drop" for="fileInput"><b>＋ Choose video from device</b><span>MP4, WebM and other browser-supported video formats · up to 40 minutes</span><input id="fileInput" type="file" accept="video/*"></label>
+      <label class="label" for="urlInput">Video link</label>
+      <input id="urlInput" type="url" placeholder="Paste a YouTube link or direct MP4 URL">
+      <button class="btn full" id="loadLink">LOAD LINK PREVIEW</button>
+      <div class="msg" id="sourceMsg" aria-live="polite">No video loaded yet.</div>
+      <div class="hint">YouTube links are preview-only here. To edit and export, upload the original video file or use a direct video file URL that permits browser playback.</div>
     </div>
-    <div class="stat">
-      <small>CAPTION ENGINE</small>
-      <strong>READY</strong>
-    </div>
-    <div class="stat">
-      <small>EXPORT FORMAT</small>
-      <strong>WEBM</strong>
+    <div class="card">
+      <h3>Video monitor</h3><p class="desc">Your uploaded footage or embedded preview appears here.</p>
+      <div class="video-frame" id="videoFrame"><div class="placeholder"><b>▶</b>YOUR VIDEO PREVIEW</div></div>
+      <div class="msg" id="monitorMsg">Waiting for a video source.</div>
     </div>
   </section>
 
-  <div class="section-title" id="video">
-    <h3>01 / VIDEO WORKSPACE</h3>
-    <span>ADD YOUR VIDEO</span>
-  </div>
-
-  <section class="workspace">
-    <div class="card">
-      <h3>Import your video</h3>
-      <p class="card-desc">
-        Upload a video you own or have permission to edit.
-        You can also preview supported video links.
-      </p>
-
-      <label class="file-drop" for="videoFile">
-        <strong>＋ Choose a video file</strong>
-        <span>Tap to upload a video from your device</span>
-        <input id="videoFile" type="file" accept="video/*">
-      </label>
-
-      <label class="field-label" for="videoUrl">Or paste a direct MP4 / YouTube link</label>
-      <input id="videoUrl" type="url" placeholder="https://example.com/video.mp4">
-
-      <button class="btn full" id="loadButton">LOAD VIDEO LINK</button>
-
-      <div class="message" id="videoStatus" aria-live="polite">
-        Your video status will appear here.
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Video preview</h3>
-      <p class="card-desc">Preview your imported video here.</p>
-
-      <div class="video-box" id="videoBox">
-        <div class="video-placeholder">
-          <strong>▶</strong>
-          <span>YOUR VIDEO APPEARS HERE</span>
-        </div>
-      </div>
-
-      <div class="message" id="previewStatus">
-        Waiting for a video.
-      </div>
-    </div>
-  </section>
-
-  <div class="section-title">
-    <h3>02 / CLIP CONTROLS</h3>
-    <span>SELECT YOUR MOMENT</span>
-  </div>
-
+  <div class="section" id="auto"><h3>02 / HIGHLIGHT ASSISTANT</h3><span>AUTO + HUMAN CONTROL</span></div>
   <section class="card">
-    <h3>Trim your clip</h3>
-    <p class="card-desc">
-      Choose the beginning and ending time for the section you want to preview and export.
-    </p>
-
-    <div class="two-col">
-      <div>
-        <label class="field-label" for="startTime">Start time (seconds)</label>
-        <input id="startTime" type="number" min="0" value="0">
-      </div>
-      <div>
-        <label class="field-label" for="endTime">End time (seconds)</label>
-        <input id="endTime" type="number" min="0" value="15">
-      </div>
+    <h3>Find moments worth clipping</h3>
+    <p class="desc">For this zero-backend prototype, paste a transcript with timestamps. The local assistant scores exciting, funny, useful and reaction-related phrases and suggests moments. It does not yet listen to or understand the video automatically.</p>
+    <label class="label" for="transcript">Transcript with timestamps</label>
+    <textarea id="transcript" rows="5" placeholder="[00:00] Welcome back everyone&#10;[00:18] I cannot believe what just happened&#10;[00:42] This is the most important lesson"></textarea>
+    <div class="two">
+      <div><label class="label" for="clipStyle">What moments should it find?</label><select id="clipStyle"><option value="all">Best overall moments</option><option value="funny">Funny moments</option><option value="exciting">Exciting moments</option><option value="important">Important / educational</option><option value="reaction">Reactions / surprises</option></select></div>
+      <div><label class="label" for="targetLength">Suggested clip length</label><select id="targetLength"><option value="20">Around 20 seconds</option><option value="30" selected>Around 30 seconds</option><option value="45">Around 45 seconds</option><option value="60">Around 60 seconds</option></select></div>
     </div>
-
-    <button class="btn full" id="previewClipButton">PREVIEW SELECTED CLIP</button>
-    <div class="message" id="clipStatus" aria-live="polite">
-      Load a video before selecting a clip.
-    </div>
+    <button class="btn full" id="findHighlights">✦ FIND HIGHLIGHT IDEAS</button>
+    <div class="msg" id="aiMsg" aria-live="polite">Add a timestamped transcript to generate suggestions.</div>
+    <div class="clip-list" id="suggestions"></div>
+    <div class="hint">Real AI highlight detection will require a backend that can securely process an authorized video or transcript using speech recognition and an AI model. This page currently demonstrates transcript-based suggestions without pretending it has analysed the video.</div>
   </section>
 
-  <div class="section-title" id="captions">
-    <h3>03 / CAPTION STUDIO</h3>
-    <span>WORD-BY-WORD ANIMATION</span>
-  </div>
+  <div class="section" id="manual"><h3>03 / MANUAL EDITOR</h3><span>YOU'RE IN CONTROL</span></div>
+  <section class="card">
+    <h3>Trim your selected moment</h3>
+    <p class="desc">Manual editing works with an uploaded video or a supported direct video file URL, not a YouTube embed.</p>
+    <div class="two">
+      <div><label class="label" for="startTime">Start (seconds)</label><input id="startTime" type="number" min="0" value="0"></div>
+      <div><label class="label" for="endTime">End (seconds)</label><input id="endTime" type="number" min="1" value="15"></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="previewClip">▶ PREVIEW SELECTED CLIP</button>
+      <button class="btn alt" id="useFull">USE FULL VIDEO</button>
+    </div>
+    <div class="msg" id="trimMsg">Load an editable video file first.</div>
+  </section>
 
-  <section class="workspace">
+  <div class="section" id="captions"><h3>04 / CAPTION STUDIO</h3><span>ANIMATED WORDS</span></div>
+  <section class="grid">
     <div class="card">
-      <h3>Build your captions</h3>
-      <p class="card-desc">
-        Type your own caption. The studio will animate the words one by one.
-      </p>
-
-      <label class="field-label" for="captionText">Caption text</label>
-      <textarea id="captionText" rows="4"
-        placeholder="Type your caption here..."></textarea>
-
-      <div class="two-col">
-        <div>
-          <label class="field-label" for="captionColor">Caption colour</label>
-          <input id="captionColor" type="color" value="#ffffff">
-        </div>
-        <div>
-          <label class="field-label" for="captionSize">Caption size</label>
-          <input id="captionSize" type="range" min="16" max="54" value="28">
-        </div>
+      <h3>Design your captions</h3>
+      <label class="label" for="captionText">Caption text</label>
+      <textarea id="captionText" rows="3" placeholder="Type or paste your caption..."></textarea>
+      <div class="two">
+        <div><label class="label" for="captionColor">Text colour</label><input id="captionColor" type="color" value="#ffffff"></div>
+        <div><label class="label" for="captionSize">Text size</label><input id="captionSize" type="range" min="16" max="54" value="30"></div>
       </div>
-
-      <label class="field-label" for="captionPosition">Caption position</label>
-      <select id="captionPosition">
-        <option value="bottom">Bottom</option>
-        <option value="middle">Middle</option>
-        <option value="top">Top</option>
-      </select>
-
-      <button class="btn full" id="animateButton">ANIMATE CAPTIONS</button>
-      <button class="btn secondary full" id="stopCaptionButton">STOP ANIMATION</button>
+      <div class="two">
+        <div><label class="label" for="captionPosition">Position</label><select id="captionPosition"><option value="bottom">Bottom</option><option value="middle">Middle</option><option value="top">Top</option></select></div>
+        <div><label class="label" for="captionSpeed">Word speed</label><select id="captionSpeed"><option value="180">Fast</option><option value="320" selected>Normal</option><option value="500">Slow</option></select></div>
+      </div>
+      <button class="btn full" id="animateCaption">ANIMATE WORDS</button>
+      <button class="btn alt full" id="stopCaption">STOP ANIMATION</button>
     </div>
-
     <div class="card">
-      <h3>Caption preview</h3>
-      <p class="card-desc">Your animated words will appear here.</p>
-
-      <div class="caption-preview" id="captionPreview">
-        YOUR CAPTIONS
-      </div>
-
-      <div class="message" id="captionStatus" aria-live="polite">
-        Ready for your caption.
-      </div>
+      <h3>Caption preview</h3><p class="desc">Preview the word-by-word effect.</p>
+      <div class="caption-demo" id="captionDemo">YOUR CAPTIONS</div>
+      <div class="msg" id="captionMsg">Ready for your text.</div>
     </div>
   </section>
 
-  <div class="section-title" id="export">
-    <h3>04 / EXPORT STUDIO</h3>
-    <span>CREATE YOUR VIDEO</span>
-  </div>
-
-  <section class="card export-card">
-    <h3>Export your edited clip</h3>
-    <p class="card-desc">
-      Export uses your selected clip and draws your animated captions
-      onto the video. The first version exports WebM, not MP4.
-    </p>
-
-    <button class="btn full" id="exportButton">EXPORT MY CLIP</button>
-
-    <div class="progress-track">
-      <div class="progress-bar" id="progressBar"></div>
+  <div class="section" id="export"><h3>05 / EXPORT STUDIO</h3><span>CREATE YOUR CLIP</span></div>
+  <section class="card">
+    <h3>Export your selected clip</h3>
+    <p class="desc">Exports the selected section with captions burned into the video as a WebM file. Browser support, device memory and video format affect export reliability. MP4 export and long-video server processing are future backend features.</p>
+    <div class="two">
+      <div><label class="label" for="aspect">Output framing</label><select id="aspect"><option value="9:16">Vertical 9:16</option><option value="16:9">Landscape 16:9</option><option value="1:1">Square 1:1</option></select></div>
+      <div><label class="label" for="quality">Export size</label><select id="quality"><option value="720">720p</option><option value="1080">1080p (may be demanding)</option></select></div>
     </div>
-
-    <div class="message" id="exportStatus" aria-live="polite">
-      Your export status will appear here.
-    </div>
+    <button class="btn full" id="exportBtn">⇩ EXPORT CLIP AS WEBM</button>
+    <div class="timeline"><div class="progress" id="progress"></div></div>
+    <div class="msg" id="exportMsg" aria-live="polite">Your export status will appear here.</div>
   </section>
-
-  <section class="card" id="about" style="margin-top:22px">
-    <h3>About CASSIUS CLIPSTUDIO</h3>
-    <p class="card-desc" style="margin:0">
-      CASSIUS CLIPSTUDIO is a creator-focused editing project.
-      This browser version processes locally supported video files.
-      Video editing and exporting depend on browser capabilities and
-      the video format. Only use content you own or have permission to edit.
-    </p>
-  </section>
-
-  <footer>
-    CASSIUS CLIPSTUDIO · CREATIVE TOOLS FOR CREATORS
-  </footer>
+  <footer>CASSIUS CLIPSTUDIO · BUILT FOR CREATORS</footer>
 </main>
 </div>
-
 <script>
-const $ = id => document.getElementById(id);
-
-const videoBox = $("videoBox");
-const videoStatus = $("videoStatus");
-const videoStat = $("videoStat");
-
-let video = null;
-let videoUrlObject = null;
-let videoKind = "none";
-let captionWords = [];
-let captionIndex = 0;
-let captionTimer = null;
-let exporting = false;
-let activeObjectUrl = null;
-
-function setMessage(id, message, type = "") {
-  const el = $(id);
-  el.textContent = message;
-  el.className = "message " + type;
+const $=id=>document.getElementById(id);
+let media=null,kind="none",objectUrl=null,captionTimer=null,exporting=false;
+const frame=$("videoFrame");
+function msg(id,text,type=""){const el=$(id);el.textContent=text;el.className="msg "+type}
+function setStats(){ $("sourceStat").textContent=media?"LOADED":kind==="youtube"?"PREVIEW ONLY":"NOT LOADED"; $("modeStat").textContent=media?"EDIT MODE":"PREVIEW"; }
+function cleanMedia(){if(media){media.pause();media.removeAttribute("src");media.load();media=null}if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}}
+function attachVideo(src,isObject=false){
+ cleanMedia();kind=isObject?"upload":"direct";
+ const v=document.createElement("video");v.controls=true;v.playsInline=true;v.preload="metadata";v.style.width="100%";v.style.height="100%";v.crossOrigin=isObject?"":"anonymous";media=v;frame.replaceChildren(v);
+ v.addEventListener("loadedmetadata",()=>{if(!Number.isFinite(v.duration)){msg("sourceMsg","Could not read video duration.","bad");return}if(v.duration>2400){msg("sourceMsg","This file is longer than 40 minutes. Please choose a shorter file.","bad");cleanMedia();return}$("startTime").value=0;$("endTime").value=Math.floor(v.duration);msg("sourceMsg","Video loaded · "+formatTime(v.duration)+" · ready to edit.","good");msg("monitorMsg","Video ready for editing.");msg("trimMsg","Set your clip start and end times.");setStats()});
+ v.addEventListener("error",()=>msg("sourceMsg","This video could not be played. Try another file or check its hosting permissions.","bad"));
+ v.src=src;v.load();setStats();msg("sourceMsg","Loading video...");
 }
-
-function createVideoElement() {
-  video = document.createElement("video");
-  video.controls = true;
-  video.playsInline = true;
-  video.preload = "metadata";
-  video.style.width = "100%";
-  video.style.height = "100%";
-  video.style.objectFit = "contain";
-
-  video.addEventListener("loadedmetadata", () => {
-    $("endTime").value = Math.floor(video.duration);
-    $("startTime").value = 0;
-    $("videoStat").textContent = "LOADED";
-    setMessage(
-      "videoStatus",
-      "Video loaded. Duration: " + Math.floor(video.duration) + " seconds.",
-      "good"
-    );
-    setMessage("previewStatus", "Your video is ready.");
-  });
-
-  video.addEventListener("error", () => {
-    setMessage(
-      "videoStatus",
-      "This video could not be played. Try uploading the video file instead.",
-      "bad"
-    );
-  });
-
-  videoBox.replaceChildren(video);
-}
-
-function stopCaptionAnimation() {
-  clearTimeout(captionTimer);
-  captionTimer = null;
-}
-
-function resetCaptionOverlay() {
-  const existing = videoBox.querySelector(".caption-overlay");
-  if (existing) existing.remove();
-}
-
-function showYouTubePreview(id) {
-  videoKind = "youtube";
-  video = null;
-  stopCaptionAnimation();
-
-  const iframe = document.createElement("iframe");
-  iframe.src = "https://www.youtube-nocookie.com/embed/" +
-    encodeURIComponent(id);
-  iframe.title = "YouTube video preview";
-  iframe.allow =
-    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-  iframe.allowFullscreen = true;
-
-  videoBox.replaceChildren(iframe);
-  $("videoStat").textContent = "PREVIEW";
-  $("previewStatus").textContent =
-    "YouTube preview mode. Upload a permitted video file for editing and export.";
-  setMessage(
-    "videoStatus",
-    "YouTube preview loaded. Editing and export require an uploaded video file.",
-    "good"
-  );
-}
-
-function getYouTubeId(value) {
-  try {
-    const url = new URL(value);
-    const host = url.hostname.toLowerCase();
-    const allowed = [
-      "youtube.com",
-      "www.youtube.com",
-      "m.youtube.com",
-      "music.youtube.com",
-      "youtube-nocookie.com",
-      "www.youtube-nocookie.com",
-      "youtu.be",
-      "www.youtu.be"
-    ];
-
-    if (!allowed.includes(host)) return null;
-
-    let id = "";
-
-    if (host === "youtu.be" || host === "www.youtu.be") {
-      id = url.pathname.split("/")[1] || "";
-    } else if (url.pathname === "/watch") {
-      id = url.searchParams.get("v") || "";
-    } else if (
-      url.pathname.startsWith("/embed/") ||
-      url.pathname.startsWith("/shorts/")
-    ) {
-      id = url.pathname.split("/")[2] || "";
-    }
-
-    return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
-  } catch {
-    return null;
-  }
-}
-
-function loadDirectVideo(url) {
-  videoKind = "direct";
-  createVideoElement();
-  video.crossOrigin = "anonymous";
-  video.src = url;
-  video.load();
-  setMessage("videoStatus", "Loading direct video link...");
-}
-
-function loadUploadedFile(file) {
-  if (!file || !file.type.startsWith("video/")) {
-    setMessage("videoStatus", "Please choose a valid video file.", "bad");
-    return;
-  }
-
-  if (videoUrlObject) URL.revokeObjectURL(videoUrlObject);
-
-  videoUrlObject = URL.createObjectURL(file);
-  videoKind = "upload";
-
-  createVideoElement();
-  video.src = videoUrlObject;
-  video.load();
-
-  setMessage("videoStatus", "Loading your uploaded video...");
-}
-
-$("videoFile").addEventListener("change", event => {
-  const file = event.target.files[0];
-  if (file) loadUploadedFile(file);
-});
-
-$("loadButton").addEventListener("click", () => {
-  const value = $("videoUrl").value.trim();
-
-  if (!value) {
-    setMessage("videoStatus", "Paste a video link first.", "bad");
-    return;
-  }
-
-  let parsed;
-  try {
-    parsed = new URL(value);
-    if (!["http:", "https:"].includes(parsed.protocol)) throw Error();
-  } catch {
-    setMessage("videoStatus", "Enter a valid HTTP or HTTPS link.", "bad");
-    return;
-  }
-
-  const youtubeId = getYouTubeId(value);
-
-  if (youtubeId) {
-    showYouTubePreview(youtubeId);
-    return;
-  }
-
-  if (!parsed.pathname.toLowerCase().endsWith(".mp4")) {
-    setMessage(
-      "videoStatus",
-      "Use a YouTube link for preview or a direct MP4 link for video loading.",
-      "bad"
-    );
-    return;
-  }
-
-  loadDirectVideo(parsed.href);
-});
-
-$("previewClipButton").addEventListener("click", async () => {
-  if (!video || !Number.isFinite(video.duration)) {
-    setMessage("clipStatus", "Load a video file before trimming.", "bad");
-    return;
-  }
-
-  const start = Number($("startTime").value);
-  const end = Number($("endTime").value);
-
-  if (
-    !Number.isFinite(start) ||
-    !Number.isFinite(end) ||
-    start < 0 ||
-    end <= start ||
-    end > video.duration
-  ) {
-    setMessage("clipStatus", "Enter valid start and end times.", "bad");
-    return;
-  }
-
-  try {
-    video.currentTime = start;
-    await video.play();
-
-    setMessage(
-      "clipStatus",
-      "Playing selected clip from " + start + "s to " + end + "s.",
-      "good"
-    );
-
-    const stopAtEnd = () => {
-      if (video && video.currentTime >= end) {
-        video.pause();
-        video.removeEventListener("timeupdate", stopAtEnd);
-      }
-    };
-
-    video.addEventListener("timeupdate", stopAtEnd);
-  } catch {
-    setMessage("clipStatus", "Tap play on the video player to begin.", "bad");
-  }
-});
-
-function updateCaptionAppearance() {
-  const preview = $("captionPreview");
-  preview.style.color = $("captionColor").value;
-  preview.style.fontSize = $("captionSize").value + "px";
-}
-
-$("captionColor").addEventListener("input", updateCaptionAppearance);
-$("captionSize").addEventListener("input", updateCaptionAppearance);
-
-function updateVideoCaption(words) {
-  if (!video) return;
-
-  let overlay = videoBox.querySelector(".caption-overlay");
-
-  if (!overlay) {
-    overlay = document.createElement("div");
-    overlay.className = "caption-overlay";
-    videoBox.appendChild(overlay);
-  }
-
-  overlay.className =
-    "caption-overlay " + $("captionPosition").value;
-  overlay.style.color = $("captionColor").value;
-  overlay.style.fontSize = $("captionSize").value + "px";
-  overlay.textContent = words.join(" ");
-}
-
-function animateCaptions() {
-  stopCaptionAnimation();
-
-  const text = $("captionText").value.trim();
-
-  if (!text) {
-    setMessage("captionStatus", "Type your caption first.", "bad");
-    return;
-  }
-
-  captionWords = text.split(/\s+/);
-  captionIndex = 0;
-
-  const preview = $("captionPreview");
-  preview.textContent = "";
-  updateCaptionAppearance();
-
-  function nextWord() {
-    if (captionIndex >= captionWords.length) {
-      setMessage("captionStatus", "Caption animation complete.", "good");
-      return;
-    }
-
-    const word = captionWords[captionIndex];
-    captionIndex++;
-
-    preview.textContent += (preview.textContent ? " " : "") + word;
-
-    updateVideoCaption(captionWords.slice(0, captionIndex));
-
-    captionTimer = setTimeout(nextWord, 350);
-  }
-
-  setMessage("captionStatus", "Animating captions...", "good");
-  nextWord();
-}
-
-$("animateButton").addEventListener("click", animateCaptions);
-
-$("stopCaptionButton").addEventListener("click", () => {
-  stopCaptionAnimation();
-  setMessage("captionStatus", "Caption animation stopped.");
-});
-
-function drawCaption(ctx, width, height, words, time) {
-  if (!words.length) return;
-
-  const position = $("captionPosition").value;
-  const fontSize = Number($("captionSize").value);
-  const color = $("captionColor").value;
-
-  const elapsedWords = Math.floor(time * 2.85);
-  const visibleWords = words.slice(
-    0,
-    Math.min(words.length, Math.max(0, elapsedWords + 1))
-  );
-
-  if (!visibleWords.length) return;
-
-  const text = visibleWords.join(" ").toUpperCase();
-
-  ctx.save();
-  ctx.font = "900 " + fontSize + "px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  const x = width / 2;
-  let y = height * .82;
-
-  if (position === "top") y = height * .17;
-  if (position === "middle") y = height * .5;
-
-  ctx.lineWidth = Math.max(3, fontSize / 8);
-  ctx.strokeStyle = "#000000";
-  ctx.fillStyle = color;
-  ctx.lineJoin = "round";
-
-  const maxWidth = width * .9;
-  const lines = [];
-  let current = "";
-
-  for (const word of text.split(" ")) {
-    const test = current ? current + " " + word : word;
-    if (ctx.measureText(test).width > maxWidth && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = test;
-    }
-  }
-
-  if (current) lines.push(current);
-
-  const lineHeight = fontSize * 1.25;
-  const firstY = y - ((lines.length - 1) * lineHeight) / 2;
-
-  lines.forEach((line, index) => {
-    const lineY = firstY + index * lineHeight;
-    ctx.strokeText(line, x, lineY, maxWidth);
-    ctx.fillText(line, x, lineY, maxWidth);
-  });
-
-  ctx.restore();
-}
-
-function chooseRecorderType() {
-  const options = [
-    "video/webm;codecs=vp9,opus",
-    "video/webm;codecs=vp8,opus",
-    "video/webm"
-  ];
-
-  return options.find(type =>
-    MediaRecorder.isTypeSupported(type)
-  ) || "";
-}
-
-async function exportClip() {
-  if (exporting) return;
-
-  if (!video || !Number.isFinite(video.duration)) {
-    setMessage("exportStatus", "Upload a video before exporting.", "bad");
-    return;
-  }
-
-  if (videoKind === "youtube") {
-    setMessage(
-      "exportStatus",
-      "YouTube preview cannot be exported. Upload a video you have permission to edit.",
-      "bad"
-    );
-    return;
-  }
-
-  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
-    setMessage(
-      "exportStatus",
-      "Your browser does not support video export. Try a recent version of Chrome.",
-      "bad"
-    );
-    return;
-  }
-
-  const start = Number($("startTime").value);
-  const end = Number($("endTime").value);
-
-  if (
-    !Number.isFinite(start) ||
-    !Number.isFinite(end) ||
-    start < 0 ||
-    end <= start ||
-    end > video.duration
-  ) {
-    setMessage("exportStatus", "Your clip times are not valid.", "bad");
-    return;
-  }
-
-  const words = $("captionText").value.trim().split(/\s+/).filter(Boolean);
-
-  const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth || 1280;
-  canvas.height = video.videoHeight || 720;
-
-  const ctx = canvas.getContext("2d");
-  const stream = canvas.captureStream(30);
-
-  let audioStream = null;
-
-  try {
-    if (typeof video.captureStream === "function") {
-      audioStream = video.captureStream();
-
-      audioStream.getAudioTracks().forEach(track => {
-        stream.addTrack(track);
-      });
-    }
-  } catch (error) {
-    console.warn("Audio capture unavailable", error);
-  }
-
-  const mimeType = chooseRecorderType();
-
-  if (!mimeType) {
-    setMessage("exportStatus", "No supported WebM recording format was found.", "bad");
-    return;
-  }
-
-  const chunks = [];
-  let recorder;
-
-  try {
-    recorder = new MediaRecorder(stream, { mimeType });
-  } catch {
-    setMessage("exportStatus", "Could not start the video recorder.", "bad");
-    return;
-  }
-
-  exporting = true;
-  $("exportButton").disabled = true;
-  $("progressBar").style.width = "0%";
-  setMessage("exportStatus", "Preparing your video export...");
-
-  recorder.ondataavailable = event => {
-    if (event.data && event.data.size > 0) chunks.push(event.data);
-  };
-
-  recorder.onerror = () => {
-    exporting = false;
-    $("exportButton").disabled = false;
-    setMessage("exportStatus", "An error interrupted the export.", "bad");
-    stream.getTracks().forEach(track => track.stop());
-  };
-
-  recorder.onstop = () => {
-    stream.getTracks().forEach(track => track.stop());
-
-    if (audioStream) {
-      audioStream.getTracks().forEach(track => track.stop());
-    }
-
-    exporting = false;
-    $("exportButton").disabled = false;
-
-    if (!chunks.length) {
-      setMessage("exportStatus", "No video data was recorded.", "bad");
-      return;
-    }
-
-    const blob = new Blob(chunks, { type: mimeType });
-    const downloadUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = downloadUrl;
-    link.download = "cassius-clipstudio-export.webm";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
-
-    $("progressBar").style.width = "100%";
-    setMessage(
-      "exportStatus",
-      "Export finished. Your WebM video download should now be available.",
-      "good"
-    );
-  };
-
-  const drawFrame = () => {
-    if (!exporting) return;
-
-    const currentTime = video.currentTime;
-    const width = canvas.width;
-    const height = canvas.height;
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, width, height);
-
-    try {
-      ctx.drawImage(video, 0, 0, width, height);
-    } catch (error) {
-      recorder.stop();
-      setMessage(
-        "exportStatus",
-        "The browser could not draw this video. Try uploading the original video file.",
-        "bad"
-      );
-      return;
-    }
-
-    drawCaption(ctx, width, height, words, currentTime - start);
-
-    const progress = Math.max(
-      0,
-      Math.min(100, ((currentTime - start) / (end - start)) * 100)
-    );
-
-    $("progressBar").style.width = progress + "%";
-
-    if (currentTime >= end || video.ended) {
-      video.pause();
-      if (recorder.state !== "inactive") recorder.stop();
-      return;
-    }
-
-    requestAnimationFrame(drawFrame);
-  };
-
-  try {
-    video.pause();
-    video.currentTime = start;
-
-    await new Promise(resolve => {
-      const ready = () => {
-        video.removeEventListener("seeked", ready);
-        resolve();
-      };
-      video.addEventListener("seeked", ready, { once: true });
-      video.currentTime = start;
-    });
-
-    recorder.start(250);
-    await video.play();
-    requestAnimationFrame(drawFrame);
-
-    setMessage(
-      "exportStatus",
-      "Recording your selected clip. Keep this page open until it finishes.",
-      "good"
-    );
-  } catch (error) {
-    if (recorder.state !== "inactive") recorder.stop();
-    exporting = false;
-    $("exportButton").disabled = false;
-    setMessage(
-      "exportStatus",
-      "Could not start export. Check that the video can play in this browser.",
-      "bad"
-    );
-  }
-}
-
-$("exportButton").addEventListener("click", exportClip);
-
-updateCaptionAppearance();
+function formatTime(s){s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function parseYouTube(raw){try{const u=new URL(raw),hosts=["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be","youtube-nocookie.com","www.youtube-nocookie.com"];if(!hosts.includes(u.hostname.toLowerCase()))return null;let id="";if(u.hostname.includes("youtu.be"))id=u.pathname.split("/")[1]||"";else if(u.pathname==="/watch")id=u.searchParams.get("v")||"";else if(u.pathname.startsWith("/embed/")||u.pathname.startsWith("/shorts/"))id=u.pathname.split("/")[2]||"";return /^[\w-]{11}$/.test(id)?id:null}catch{return null}}
+$("fileInput").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith("video/")){msg("sourceMsg","Choose a valid video file.","bad");return}const u=URL.createObjectURL(f);objectUrl=u;attachVideo(u,true)});
+$("loadLink").addEventListener("click",()=>{const raw=$("urlInput").value.trim();if(!raw){msg("sourceMsg","Paste a video link first.","bad");return}let u;try{u=new URL(raw);if(!["http:","https:"].includes(u.protocol))throw 0}catch{msg("sourceMsg","Enter a valid http or https link.","bad");return}const id=parseYouTube(raw);if(id){cleanMedia();kind="youtube";const f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+id;f.title="YouTube preview";f.allow="accelerometer; autoplay; encrypted-media; picture-in-picture; web-share";f.allowFullscreen=true;frame.replaceChildren(f);msg("sourceMsg","YouTube preview loaded. Upload the original video to edit and export.","good");msg("monitorMsg","Preview only · editing is unavailable for this embedded player.");setStats();return}if(!u.pathname.toLowerCase().endsWith(".mp4")){msg("sourceMsg","Use a YouTube link for preview or a direct MP4 video URL for editing.","bad");return}attachVideo(u.href,false)});
+$("previewClip").addEventListener("click",async()=>{if(!media){msg("trimMsg","Load an editable video file first. A YouTube preview cannot be trimmed here.","bad");return}const a=Number($("startTime").value),b=Number($("endTime").value);if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=a||b>media.duration){msg("trimMsg","Enter a valid start and end within the video duration.","bad");return}try{media.currentTime=a;await media.play();msg("trimMsg","Previewing "+formatTime(a)+" to "+formatTime(b)+".","good");const stop=()=>{if(media&&media.currentTime>=b){media.pause();media.removeEventListener("timeupdate",stop)}};media.addEventListener("timeupdate",stop)}catch{msg("trimMsg","Tap play in the video player to begin.","bad")}});
+$("useFull").addEventListener("click",()=>{if(!media){msg("trimMsg","Load an editable video first.","bad");return}$("startTime").value=0;$("endTime").value=Math.floor(media.duration);msg("trimMsg","Full video selected.","good")});
+function parseTimestamp(s){const p=s.split(":").map(Number);if(p.some(n=>!Number.isFinite(n)))return null;if(p.length===2)return p[0]*60+p[1];if(p.length===3)return p[0]*3600+p[1]*60+p[2];return null}
+const patterns={
+ funny:/laugh|funny|joke|hilarious|ridiculous|crazy|comedy|lol|prank|fail|silly/i,
+ exciting:/wow|amazing|incredible|unbelievable|suddenly|insane|huge|surprise|爆|winning|finally|explosion/i,
+ important:/important|remember|lesson|learn|because|therefore|key|tip|mistake|step|reason|explains|means/i,
+ reaction:/what|no way|oh my|seriously|shocked|surprised|reaction|did that|cannot believe|can't believe/i
+};
+function getTranscriptLines(text){const lines=text.split(/\n+/).map(x=>x.trim()).filter(Boolean),out=[];for(const line of lines){const m=line.match(/^\[?(\d{1,2}:\d{2}(?::\d{2})?)\]?\s+(.+)$/);if(!m)continue;const t=parseTimestamp(m[1]);if(t!==null)out.push({time:t,text:m[2]})}return out}
+function buildSuggestions(){const lines=getTranscriptLines($("transcript").value);if(lines.length<2){msg("aiMsg","Add at least two timestamped transcript lines, for example [00:12] words spoken here.","bad");return}const style=$("clipStyle").value,duration=Number($("targetLength").value);let candidates=[];for(let i=0;i<lines.length;i++){const start=lines[i].time;if(media&&start>=media.duration)continue;let end=Math.min(start+duration,lines[i+1]?.time||start+duration);if(end-start<8)end=start+Math.min(duration,20);const text=lines.filter(x=>x.time>=start&&x.time<end).map(x=>x.text).join(" ");if(!text)continue;let score=0;if(style==="all"){for(const re of Object.values(patterns))if(re.test(text))score+=2}else{const re=patterns[style];if(re&&re.test(text))score+=5}score+=Math.min(3,(text.match(/[!?]/g)||[]).length);score+=Math.min(2,Math.floor(text.split(/\s+/).length/18));candidates.push({start,end,text,score})}
+ candidates.sort((a,b)=>b.score-a.score);candidates=candidates.slice(0,5);if(!candidates.length){msg("aiMsg","No usable timestamped sections found. Check your timestamps.","bad");return}const list=$("suggestions");list.replaceChildren();candidates.forEach((c,i)=>{const item=document.createElement("div");item.className="clip";const info=document.createElement("div");const strong=document.createElement("strong");strong.textContent=(i+1)+". "+(c.score>=5?"Strong match":c.score>=2?"Possible highlight":"Transcript section");const small=document.createElement("small");small.textContent=formatTime(c.start)+" – "+formatTime(c.end)+" · "+c.text.slice(0,115);info.append(strong,small);const actions=document.createElement("div");actions.className="clip-actions";const use=document.createElement("button");use.className="btn";use.textContent="USE CLIP";use.addEventListener("click",()=>{if(!media){msg("trimMsg","Upload the video file first, then select this suggested clip.","bad")}else if(c.end>media.duration){msg("trimMsg","This suggested timestamp is beyond the uploaded video's duration.","bad")}else{$("startTime").value=c.start;$("endTime").value=Math.min(c.end,Math.floor(media.duration));$("captionText").value=c.text;msg("trimMsg","Highlight selected. Preview it or adjust the times.","good");document.querySelector("#manual").scrollIntoView({behavior:"smooth"})}});actions.append(use);item.append(info,actions);list.append(item)});$("clipStat").textContent=candidates.length;msg("aiMsg","Created "+candidates.length+" transcript-based suggestions. Review them before using.","good")}
+$("findHighlights").addEventListener("click",buildSuggestions);
+let words=[],wordIndex=0;
+function stopCaption(){clearTimeout(captionTimer);captionTimer=null}
+function updateCaptionStyle(){const d=$("captionDemo");d.style.color=$("captionColor").value;d.style.fontSize=$("captionSize").value+"px"}
+$("captionColor").addEventListener("input",updateCaptionStyle);$("captionSize").addEventListener("input",updateCaptionStyle);
+$("animateCaption").addEventListener("click",()=>{stopCaption();words=$("captionText").value.trim().split(/\s+/).filter(Boolean);wordIndex=0;if(!words.length){msg("captionMsg","Type your caption first.","bad");return}const tick=()=>{if(wordIndex>=words.length){msg("captionMsg","Caption animation complete.","good");return}wordIndex++;$("captionDemo").textContent=words.slice(0,wordIndex).join(" ");captionTimer=setTimeout(tick,Number($("captionSpeed").value))};updateCaptionStyle();msg("captionMsg","Animating word by word...","good");tick()});
+$("stopCaption").addEventListener("click",()=>{stopCaption();msg("captionMsg","Animation stopped.")});
+function captionAt(ctx,w,h,caption,time){if(!caption.length)return;const count=Math.min(caption.length,Math.max(0,Math.floor(time*1000/Number($("captionSpeed").value))+1));if(!count)return;const text=caption.slice(0,count).join(" ").toUpperCase(),size=Number($("captionSize").value);ctx.save();ctx.font="900 "+size+"px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.lineJoin="round";ctx.lineWidth=Math.max(3,size/8);ctx.strokeStyle="#000";ctx.fillStyle=$("captionColor").value;let y=h*.84;if($("captionPosition").value==="top")y=h*.16;if($("captionPosition").value==="middle")y=h*.5;const max=w*.9,parts=[];let line="";for(const word of text.split(" ")){const test=line?line+" "+word:word;if(ctx.measureText(test).width>max&&line){parts.push(line);line=word}else line=test}if(line)parts.push(line);const lh=size*1.2,first=y-(parts.length-1)*lh/2;parts.forEach((p,i)=>{ctx.strokeText(p,w/2,first+i*lh,max);ctx.fillText(p,w/2,first+i*lh,max)});ctx.restore()}
+function recorderType(){return ["video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"].find(t=>MediaRecorder.isTypeSupported(t))||""}
+async function exportVideo(){if(exporting)return;if(!media){msg("exportMsg","Upload an editable video file before exporting.","bad");return}if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){msg("exportMsg","This browser does not support in-browser video export. Try a current Chrome browser.","bad");return}const start=Number($("startTime").value),end=Number($("endTime").value);if(start<0||end<=start||end>media.duration){msg("exportMsg","Check your clip start and end times.","bad");return}const type=recorderType();if(!type){msg("exportMsg","No supported WebM recording format was found.","bad");return}const aspect=$("aspect").value,q=Number($("quality").value);let w,h;if(aspect==="9:16"){h=q;w=Math.round(h*9/16)}else if(aspect==="1:1"){w=h=q}else{w=q;h=Math.round(w*9/16)}const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;const ctx=canvas.getContext("2d");const stream=canvas.captureStream(30);let audio=null;try{if(typeof media.captureStream==="function"){audio=media.captureStream();audio.getAudioTracks().forEach(t=>stream.addTrack(t))}}catch(e){}const chunks=[];let recorder;try{recorder=new MediaRecorder(stream,{mimeType:type})}catch(e){msg("exportMsg","Could not initialize the recorder on this device.","bad");return}const caption=$("captionText").value.trim().split(/\s+/).filter(Boolean);exporting=true;$("exportBtn").disabled=true;$("progress").style.width="0%";msg("exportMsg","Starting export. Keep this page open until it finishes.","good");recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};recorder.onerror=()=>{exporting=false;$("exportBtn").disabled=false;msg("exportMsg","Recording failed. Try a shorter clip or lower export size.","bad");stream.getTracks().forEach(t=>t.stop())};recorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());if(audio)audio.getTracks().forEach(t=>t.stop());exporting=false;$("exportBtn").disabled=false;if(!chunks.length){msg("exportMsg","No video data was produced.","bad");return}const blob=new Blob(chunks,{type});const link=document.createElement("a");const url=URL.createObjectURL(blob);link.href=url;link.download="cassius-clipstudio.webm";document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);$("progress").style.width="100%";msg("exportMsg","Export complete. Your WebM download should be available.","good")};
+const original=media;const draw=()=>{if(!exporting)return;try{ctx.fillStyle="#000";ctx.fillRect(0,0,w,h);const vw=original.videoWidth,vh=original.videoHeight;const scale=Math.min(w/vw,h/vh),dw=vw*scale,dh=vh*scale;ctx.drawImage(original,(w-dw)/2,(h-dh)/2,dw,dh);captionAt(ctx,w,h,caption,original.currentTime-start)}catch(e){if(recorder.state!=="inactive")recorder.stop();msg("exportMsg","Could not render this video. Try uploading a different file.","bad");return}const pct=Math.max(0,Math.min(100,(original.currentTime-start)/(end-start)*100));$("progress").style.width=pct+"%";if(original.currentTime>=end||original.ended){original.pause();if(recorder.state!=="inactive")recorder.stop();return}requestAnimationFrame(draw)};
+try{original.pause();await new Promise(resolve=>{if(Math.abs(original.currentTime-start)<.05){resolve();return}original.addEventListener("seeked",resolve,{once:true});original.currentTime=start});recorder.start(250);await original.play();requestAnimationFrame(draw)}catch(e){if(recorder.state!=="inactive")recorder.stop();exporting=false;$("exportBtn").disabled=false;msg("exportMsg","Could not start playback for export. Tap play once, then try again.","bad")}}
+$("exportBtn").addEventListener("click",exportVideo);updateCaptionStyle();setStats();
 </script>
 </body>
-</html>
+                                                                                                                                             </html>
