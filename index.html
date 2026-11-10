@@ -4,18 +4,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#05070d">
-
-<title>CASSIUS CLIPSTUDIO</title>
+<meta name="theme-color" content="#050711">
+<title>CASSIUS CLIPSTUDIO — AI Video Studio</title>
 
 <style>
 :root {
-  --blue: #1855c9;
-  --light: #69a0ff;
-  --black: #05070d;
-  --panel: #101725;
-  --text: #ffffff;
-  --muted: #9aa9c2;
+  --bg: #050711;
+  --panel: #0c1222;
+  --panel2: #111b30;
+  --blue: #2463eb;
+  --blue2: #478bff;
+  --white: #f7f9ff;
+  --muted: #8998b5;
+  --border: #1c2a45;
+  --green: #39d98a;
+  --red: #ff647c;
 }
 
 * {
@@ -25,435 +28,1378 @@
 }
 
 body {
-  background: var(--black);
-  color: var(--text);
-  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at 50% -20%, #153b82 0%, transparent 42%),
+    var(--bg);
+  color: var(--white);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
 }
 
-header {
-  padding: 20px;
-  border-bottom: 1px solid #1d2d49;
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+
+.app {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  min-height: 100vh;
 }
 
-.logo {
+.sidebar {
+  width: 250px;
+  background: #080d19;
+  border-right: 1px solid var(--border);
+  padding: 25px 17px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 5;
+}
+
+.brand {
+  padding: 15px 10px 32px;
+}
+
+.brand-mark {
+  color: var(--blue2);
+  font-size: 48px;
+  font-weight: 1000;
+  letter-spacing: -5px;
+  text-shadow: 0 0 28px #2463eb99;
+}
+
+.brand-name {
+  font-size: 18px;
   font-weight: 900;
+  letter-spacing: 1.8px;
+  margin-top: 3px;
+}
+
+.brand-sub {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  margin-top: 7px;
+}
+
+.nav-label {
+  color: #61708c;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 15px 12px 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #9aabc9;
+  padding: 14px 13px;
+  margin: 5px 0;
+  border-radius: 10px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: .2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
   color: white;
-  font-size: 19px;
+  background: linear-gradient(100deg, #1854c8, #18366f);
 }
 
-.logo span {
-  color: var(--light);
+.sidebar-bottom {
+  position: absolute;
+  bottom: 25px;
+  left: 17px;
+  right: 17px;
+  background: #101a2c;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
 }
 
-main {
-  width: 92%;
-  max-width: 850px;
-  margin: 35px auto;
+.sidebar-bottom strong {
+  font-size: 12px;
 }
 
-.hero {
-  text-align: center;
+.sidebar-bottom p {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 7px;
+  line-height: 1.5;
+}
+
+.main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 28px 34px 60px;
+  max-width: 1600px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
   margin-bottom: 30px;
 }
 
-.hero h1 {
-  font-size: clamp(27px, 6vw, 42px);
-  margin-bottom: 12px;
+.topbar small {
+  color: var(--muted);
+  letter-spacing: 2px;
+  font-size: 10px;
 }
 
-.hero h1 span {
-  color: var(--light);
+.topbar h1 {
+  font-size: 24px;
+  margin-top: 6px;
+}
+
+.status-pill {
+  border: 1px solid #245b45;
+  color: var(--green);
+  background: #10251f;
+  padding: 9px 13px;
+  border-radius: 30px;
+  font-size: 11px;
+}
+
+.hero {
+  padding: 34px;
+  border: 1px solid #244b91;
+  border-radius: 20px;
+  background:
+    linear-gradient(110deg, #112b5b 0%, #0c1830 55%, #10182b 100%);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.hero::after {
+  content: "C";
+  position: absolute;
+  right: 25px;
+  top: -65px;
+  font-size: 260px;
+  line-height: 1;
+  font-weight: 1000;
+  color: #ffffff08;
+  pointer-events: none;
+}
+
+.hero-tag {
+  color: #8eb7ff;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  margin-bottom: 15px;
+}
+
+.hero h2 {
+  font-size: clamp(30px, 5vw, 53px);
+  line-height: 1.08;
+  max-width: 650px;
+  letter-spacing: -2px;
+}
+
+.hero h2 span {
+  color: #6da5ff;
 }
 
 .hero p {
+  color: #b2c3e0;
+  margin-top: 15px;
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+.hero-logo {
+  margin-top: 24px;
+  display: inline-block;
+  padding: 10px 15px;
+  border: 1px solid #5489ed;
+  border-radius: 8px;
+  color: #c8dcff;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 19px;
+}
+
+.stat small {
   color: var(--muted);
-  line-height: 1.6;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 21px;
+  margin-top: 9px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px 0 14px;
+}
+
+.section-title h3 {
+  font-size: 16px;
+}
+
+.section-title span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(270px, .8fr);
+  gap: 17px;
 }
 
 .card {
   background: var(--panel);
-  border: 1px solid #203455;
+  border: 1px solid var(--border);
   border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 21px;
+  min-width: 0;
+  animation: appear .5s ease both;
 }
 
-h2 {
-  font-size: 19px;
-  margin-bottom: 15px;
+@keyframes appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-label {
-  display: block;
-  margin: 15px 0 8px;
-  color: #d7e3f9;
+.card h3 {
   font-size: 14px;
+  margin-bottom: 8px;
 }
 
-input, button, select {
+.card-desc {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+  margin-bottom: 17px;
+}
+
+.field-label {
+  display: block;
+  color: #aebbd2;
+  font-size: 11px;
+  margin: 15px 0 8px;
+}
+
+input, select, textarea {
   width: 100%;
-  padding: 14px;
-  border-radius: 9px;
-  border: 1px solid #263c60;
-  background: #080e19;
+  background: #080e1b;
+  border: 1px solid #263753;
   color: white;
-  font-size: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  outline: none;
 }
 
-input:focus {
-  outline: 1px solid var(--light);
+input:focus, select:focus, textarea:focus {
+  border-color: var(--blue2);
 }
 
-button {
-  background: var(--blue);
-  border: none;
+input[type="color"] {
+  height: 43px;
+  padding: 5px;
+}
+
+input[type="range"] {
+  padding: 0;
+  accent-color: var(--blue2);
+}
+
+.btn {
+  background: linear-gradient(110deg, #1854c8, #347df4);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 11px;
   font-weight: bold;
-  cursor: pointer;
+  transition: .2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 22px #2463eb55;
+}
+
+.btn.secondary {
+  background: #17243a;
+  border: 1px solid #314969;
+}
+
+.btn.full {
+  width: 100%;
   margin-top: 12px;
 }
 
-button:active {
-  opacity: .8;
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.secondary {
-  background: #17243b;
+.file-drop {
+  border: 1px dashed #3a5f9b;
+  background: #0a1427;
+  padding: 25px 15px;
+  border-radius: 11px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-drop strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.file-drop span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.file-drop input {
+  display: none;
 }
 
 .video-box {
-  background: #000;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-top: 15px;
-}
-
-video {
-  display: block;
   width: 100%;
-  max-height: 450px;
-}
-
-.preview {
-  width: 210px;
-  max-width: 100%;
-  aspect-ratio: 9 / 16;
-  margin: 15px auto;
-  background: linear-gradient(145deg,#102b60,#03060d);
-  border: 2px solid #315ba2;
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  text-align: center;
-  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #02040a;
+  border: 1px solid #263958;
+  border-radius: 11px;
   overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.caption {
-  font-size: 23px;
-  font-weight: 900;
+.video-box video,
+.video-box iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+}
+
+.video-placeholder {
+  text-align: center;
+  color: #637492;
+  padding: 20px;
+}
+
+.video-placeholder strong {
+  display: block;
+  font-size: 35px;
+  color: #285fc2;
+  margin-bottom: 10px;
+}
+
+.video-placeholder span {
+  font-size: 11px;
+}
+
+.caption-overlay {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 12%;
+  text-align: center;
+  font-weight: 1000;
+  font-size: 25px;
   text-transform: uppercase;
-  line-height: 1.4;
-  text-shadow: 2px 3px 5px black;
+  line-height: 1.2;
+  pointer-events: none;
+  text-shadow:
+    2px 2px 2px #000,
+    -2px -2px 2px #000,
+    0 4px 8px #000;
+  overflow-wrap: anywhere;
 }
 
-.caption span {
+.caption-overlay.top {
+  bottom: auto;
+  top: 12%;
+}
+
+.caption-overlay.middle {
+  bottom: auto;
+  top: 45%;
+}
+
+.caption-overlay span {
   display: inline-block;
-  margin: 2px;
-  animation: pop .25s ease;
+  margin: 0 4px;
 }
 
-@keyframes pop {
-  from {
-    transform: scale(.5);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.small {
-  font-size: 12px;
+.message {
   color: var(--muted);
+  font-size: 11px;
+  margin-top: 12px;
   line-height: 1.6;
-  margin-top: 10px;
+  min-height: 18px;
 }
 
-.status {
-  color: #77b4ff;
-  font-size: 13px;
-  margin-top: 10px;
+.message.good {
+  color: var(--green);
+}
+
+.message.bad {
+  color: var(--red);
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.caption-preview {
+  min-height: 85px;
+  background: #050914;
+  border: 1px solid #263753;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+  font-weight: 1000;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.export-card {
+  background: linear-gradient(130deg, #11264a, #0c1425);
+  border-color: #315b9e;
+}
+
+.progress-track {
+  width: 100%;
+  height: 7px;
+  background: #1c2b42;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2463eb, #6da5ff);
+  transition: width .2s;
 }
 
 footer {
   text-align: center;
-  color: #7789a7;
-  padding: 30px 10px;
-  font-size: 12px;
+  color: #64738d;
+  font-size: 10px;
+  padding: 35px 10px;
+  letter-spacing: 1px;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media(max-width: 950px) {
+  .sidebar {
+    width: 205px;
+  }
+  .main {
+    margin-left: 205px;
+    width: calc(100% - 205px);
+    padding: 22px;
+  }
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width: 650px) {
+  .sidebar {
+    display: none;
+  }
+  .main {
+    margin-left: 0;
+    width: 100%;
+    padding: 17px;
+  }
+  .mobile-menu {
+    display: block;
+    color: var(--blue2);
+    font-size: 12px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+  }
+  .hero {
+    padding: 25px 20px;
+  }
+  .stats {
+    gap: 8px;
+  }
+  .stat {
+    padding: 13px 10px;
+  }
+  .stat strong {
+    font-size: 16px;
+  }
+  .stat small {
+    font-size: 8px;
+  }
+  .topbar h1 {
+    font-size: 20px;
+  }
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<header>
-  <div class="logo">
-    CASSIUS <span>CLIPSTUDIO</span>
-  </div>
-  <div style="color:#75aaff;font-size:12px">
-    AI VIDEO STUDIO
-  </div>
-</header>
-
-<main>
-
-<section class="hero">
-  <h1>Turn long videos into <span>shorts.</span></h1>
-  <p>
-    Create vertical content, preview animated
-    captions and prepare clips for social media.
-  </p>
-</section>
-
-<section class="card">
-  <h2>01. Add your video</h2>
-
-  <label for="videoUrl">Direct MP4 video link</label>
-
-  <input
-    id="videoUrl"
-    type="url"
-    placeholder="https://example.com/my-video.mp4"
-  >
-
-  <button onclick="loadVideo()">
-    Load video
-  </button>
-
-  <div class="video-box">
-    <video id="sourceVideo" controls playsinline>
-    </video>
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">C</div>
+    <div class="brand-name">CASSIUS</div>
+    <div class="brand-sub">CLIPSTUDIO</div>
   </div>
 
-  <p id="videoStatus" class="status">
-    Waiting for a video.
-  </p>
+  <div class="nav-label">WORKSPACE</div>
+  <a class="nav-item active" href="#dashboard">▦ Dashboard</a>
+  <a class="nav-item" href="#video">▶ Video editor</a>
+  <a class="nav-item" href="#captions">✦ Animated captions</a>
+  <a class="nav-item" href="#export">⇩ Export studio</a>
 
-  <p class="small">
-    Use direct MP4 links to videos you own or
-    have permission to edit. YouTube watch links
-    are not direct video files.
-  </p>
-</section>
+  <div class="nav-label">INFORMATION</div>
+  <a class="nav-item" href="#about">ⓘ About the studio</a>
 
-<section class="card">
-  <h2>02. Select your clip</h2>
+  <div class="sidebar-bottom">
+    <strong>CASSIUS STUDIO</strong>
+    <p>Creative tools for creators. Built to make video editing more accessible.</p>
+  </div>
+</aside>
 
-  <label>Start time (seconds)</label>
-  <input id="startTime" type="number"
-    value="0" min="0">
+<main class="main" id="dashboard">
 
-  <label>End time (seconds)</label>
-  <input id="endTime" type="number"
-    value="30" min="1">
+  <div class="mobile-menu">CASSIUS / CLIPSTUDIO</div>
 
-  <button class="secondary" onclick="previewClip()">
-    Preview selected clip
-  </button>
-
-  <p id="clipStatus" class="status">
-    No clip selected.
-  </p>
-</section>
-
-<section class="card">
-  <h2>03. Animated captions</h2>
-
-  <label>Enter your transcript</label>
-
-  <input id="captionText"
-    placeholder="Enter what the speaker says...">
-
-  <label>Caption colour</label>
-
-  <select id="captionColor">
-    <option value="#ffffff">White</option>
-    <option value="#69a0ff">Royal blue</option>
-    <option value="#ffe600">Yellow</option>
-    <option value="#00ff9d">Green</option>
-  </select>
-
-  <button onclick="animateCaptions()">
-    Preview animated captions
-  </button>
-
-  <div class="preview">
-    <div id="captionOutput" class="caption">
-      YOUR CAPTIONS
+  <header class="topbar">
+    <div>
+      <small>CREATOR WORKSPACE</small>
+      <h1>Video editing dashboard</h1>
     </div>
+    <div class="status-pill">● STUDIO READY</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-tag">WELCOME TO THE NEXT GENERATION</div>
+    <h2>CREATE. EDIT.<br><span>MAKE IT VIRAL.</span></h2>
+    <p>
+      Turn your own videos into engaging clips with animated captions,
+      simple editing controls and a creator-focused workspace.
+    </p>
+    <div class="hero-logo">CASSIUS CLIPSTUDIO</div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <small>VIDEO WORKSPACE</small>
+      <strong id="videoStat">EMPTY</strong>
+    </div>
+    <div class="stat">
+      <small>CAPTION ENGINE</small>
+      <strong>READY</strong>
+    </div>
+    <div class="stat">
+      <small>EXPORT FORMAT</small>
+      <strong>WEBM</strong>
+    </div>
+  </section>
+
+  <div class="section-title" id="video">
+    <h3>01 / VIDEO WORKSPACE</h3>
+    <span>ADD YOUR VIDEO</span>
   </div>
 
-  <p class="small">
-    Word-by-word animated caption preview.
-    Automatic speech recognition will be added
-    in a later development phase.
-  </p>
-</section>
+  <section class="workspace">
+    <div class="card">
+      <h3>Import your video</h3>
+      <p class="card-desc">
+        Upload a video you own or have permission to edit.
+        You can also preview supported video links.
+      </p>
 
-<section class="card">
-  <h2>04. Your export settings</h2>
+      <label class="file-drop" for="videoFile">
+        <strong>＋ Choose a video file</strong>
+        <span>Tap to upload a video from your device</span>
+        <input id="videoFile" type="file" accept="video/*">
+      </label>
 
-  <label>Video format</label>
+      <label class="field-label" for="videoUrl">Or paste a direct MP4 / YouTube link</label>
+      <input id="videoUrl" type="url" placeholder="https://example.com/video.mp4">
 
-  <select id="format">
-    <option>9:16 - TikTok / Reels / Shorts</option>
-  </select>
+      <button class="btn full" id="loadButton">LOAD VIDEO LINK</button>
 
-  <label>Video quality</label>
+      <div class="message" id="videoStatus" aria-live="polite">
+        Your video status will appear here.
+      </div>
+    </div>
 
-  <select id="quality">
-    <option>1080p</option>
-    <option>720p</option>
-  </select>
+    <div class="card">
+      <h3>Video preview</h3>
+      <p class="card-desc">Preview your imported video here.</p>
 
-  <button onclick="alert('MP4 export will be added in Phase 2.')">
-    Prepare video export
-  </button>
+      <div class="video-box" id="videoBox">
+        <div class="video-placeholder">
+          <strong>▶</strong>
+          <span>YOUR VIDEO APPEARS HERE</span>
+        </div>
+      </div>
 
-  <p class="small">
-    Video rendering and downloadable MP4 export
-    are planned for Phase 2.
-  </p>
-</section>
+      <div class="message" id="previewStatus">
+        Waiting for a video.
+      </div>
+    </div>
+  </section>
 
+  <div class="section-title">
+    <h3>02 / CLIP CONTROLS</h3>
+    <span>SELECT YOUR MOMENT</span>
+  </div>
+
+  <section class="card">
+    <h3>Trim your clip</h3>
+    <p class="card-desc">
+      Choose the beginning and ending time for the section you want to preview and export.
+    </p>
+
+    <div class="two-col">
+      <div>
+        <label class="field-label" for="startTime">Start time (seconds)</label>
+        <input id="startTime" type="number" min="0" value="0">
+      </div>
+      <div>
+        <label class="field-label" for="endTime">End time (seconds)</label>
+        <input id="endTime" type="number" min="0" value="15">
+      </div>
+    </div>
+
+    <button class="btn full" id="previewClipButton">PREVIEW SELECTED CLIP</button>
+    <div class="message" id="clipStatus" aria-live="polite">
+      Load a video before selecting a clip.
+    </div>
+  </section>
+
+  <div class="section-title" id="captions">
+    <h3>03 / CAPTION STUDIO</h3>
+    <span>WORD-BY-WORD ANIMATION</span>
+  </div>
+
+  <section class="workspace">
+    <div class="card">
+      <h3>Build your captions</h3>
+      <p class="card-desc">
+        Type your own caption. The studio will animate the words one by one.
+      </p>
+
+      <label class="field-label" for="captionText">Caption text</label>
+      <textarea id="captionText" rows="4"
+        placeholder="Type your caption here..."></textarea>
+
+      <div class="two-col">
+        <div>
+          <label class="field-label" for="captionColor">Caption colour</label>
+          <input id="captionColor" type="color" value="#ffffff">
+        </div>
+        <div>
+          <label class="field-label" for="captionSize">Caption size</label>
+          <input id="captionSize" type="range" min="16" max="54" value="28">
+        </div>
+      </div>
+
+      <label class="field-label" for="captionPosition">Caption position</label>
+      <select id="captionPosition">
+        <option value="bottom">Bottom</option>
+        <option value="middle">Middle</option>
+        <option value="top">Top</option>
+      </select>
+
+      <button class="btn full" id="animateButton">ANIMATE CAPTIONS</button>
+      <button class="btn secondary full" id="stopCaptionButton">STOP ANIMATION</button>
+    </div>
+
+    <div class="card">
+      <h3>Caption preview</h3>
+      <p class="card-desc">Your animated words will appear here.</p>
+
+      <div class="caption-preview" id="captionPreview">
+        YOUR CAPTIONS
+      </div>
+
+      <div class="message" id="captionStatus" aria-live="polite">
+        Ready for your caption.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title" id="export">
+    <h3>04 / EXPORT STUDIO</h3>
+    <span>CREATE YOUR VIDEO</span>
+  </div>
+
+  <section class="card export-card">
+    <h3>Export your edited clip</h3>
+    <p class="card-desc">
+      Export uses your selected clip and draws your animated captions
+      onto the video. The first version exports WebM, not MP4.
+    </p>
+
+    <button class="btn full" id="exportButton">EXPORT MY CLIP</button>
+
+    <div class="progress-track">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="message" id="exportStatus" aria-live="polite">
+      Your export status will appear here.
+    </div>
+  </section>
+
+  <section class="card" id="about" style="margin-top:22px">
+    <h3>About CASSIUS CLIPSTUDIO</h3>
+    <p class="card-desc" style="margin:0">
+      CASSIUS CLIPSTUDIO is a creator-focused editing project.
+      This browser version processes locally supported video files.
+      Video editing and exporting depend on browser capabilities and
+      the video format. Only use content you own or have permission to edit.
+    </p>
+  </section>
+
+  <footer>
+    CASSIUS CLIPSTUDIO · CREATIVE TOOLS FOR CREATORS
+  </footer>
 </main>
-
-<footer>
-  CASSIUS CLIPSTUDIO<br><br>
-  Powered by CASSIUS QUICKTOOLS
-</footer>
+</div>
 
 <script>
-const video = document.getElementById("sourceVideo");
+const $ = id => document.getElementById(id);
 
-function loadVideo() {
-  const url = document.getElementById("videoUrl").value.trim();
-  const status = document.getElementById("videoStatus");
+const videoBox = $("videoBox");
+const videoStatus = $("videoStatus");
+const videoStat = $("videoStat");
 
+let video = null;
+let videoUrlObject = null;
+let videoKind = "none";
+let captionWords = [];
+let captionIndex = 0;
+let captionTimer = null;
+let exporting = false;
+let activeObjectUrl = null;
+
+function setMessage(id, message, type = "") {
+  const el = $(id);
+  el.textContent = message;
+  el.className = "message " + type;
+}
+
+function createVideoElement() {
+  video = document.createElement("video");
+  video.controls = true;
+  video.playsInline = true;
+  video.preload = "metadata";
+  video.style.width = "100%";
+  video.style.height = "100%";
+  video.style.objectFit = "contain";
+
+  video.addEventListener("loadedmetadata", () => {
+    $("endTime").value = Math.floor(video.duration);
+    $("startTime").value = 0;
+    $("videoStat").textContent = "LOADED";
+    setMessage(
+      "videoStatus",
+      "Video loaded. Duration: " + Math.floor(video.duration) + " seconds.",
+      "good"
+    );
+    setMessage("previewStatus", "Your video is ready.");
+  });
+
+  video.addEventListener("error", () => {
+    setMessage(
+      "videoStatus",
+      "This video could not be played. Try uploading the video file instead.",
+      "bad"
+    );
+  });
+
+  videoBox.replaceChildren(video);
+}
+
+function stopCaptionAnimation() {
+  clearTimeout(captionTimer);
+  captionTimer = null;
+}
+
+function resetCaptionOverlay() {
+  const existing = videoBox.querySelector(".caption-overlay");
+  if (existing) existing.remove();
+}
+
+function showYouTubePreview(id) {
+  videoKind = "youtube";
+  video = null;
+  stopCaptionAnimation();
+
+  const iframe = document.createElement("iframe");
+  iframe.src = "https://www.youtube-nocookie.com/embed/" +
+    encodeURIComponent(id);
+  iframe.title = "YouTube video preview";
+  iframe.allow =
+    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  iframe.allowFullscreen = true;
+
+  videoBox.replaceChildren(iframe);
+  $("videoStat").textContent = "PREVIEW";
+  $("previewStatus").textContent =
+    "YouTube preview mode. Upload a permitted video file for editing and export.";
+  setMessage(
+    "videoStatus",
+    "YouTube preview loaded. Editing and export require an uploaded video file.",
+    "good"
+  );
+}
+
+function getYouTubeId(value) {
   try {
-    const parsed = new URL(url);
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase();
+    const allowed = [
+      "youtube.com",
+      "www.youtube.com",
+      "m.youtube.com",
+      "music.youtube.com",
+      "youtube-nocookie.com",
+      "www.youtube-nocookie.com",
+      "youtu.be",
+      "www.youtu.be"
+    ];
 
-    if (parsed.protocol !== "https:" &&
-        parsed.protocol !== "http:") {
-      throw new Error("Invalid protocol");
+    if (!allowed.includes(host)) return null;
+
+    let id = "";
+
+    if (host === "youtu.be" || host === "www.youtu.be") {
+      id = url.pathname.split("/")[1] || "";
+    } else if (url.pathname === "/watch") {
+      id = url.searchParams.get("v") || "";
+    } else if (
+      url.pathname.startsWith("/embed/") ||
+      url.pathname.startsWith("/shorts/")
+    ) {
+      id = url.pathname.split("/")[2] || "";
     }
 
-    if (!parsed.pathname.toLowerCase().endsWith(".mp4")) {
-      status.textContent =
-        "Please use a direct MP4 video link.";
-      return;
-    }
-
-    video.src = parsed.href;
-    video.load();
-
-    status.textContent = "Loading video...";
-
-    video.onloadedmetadata = () => {
-      document.getElementById("endTime").value =
-        Math.floor(video.duration);
-
-      status.textContent =
-        "Video loaded. Duration: " +
-        Math.floor(video.duration) + " seconds.";
-    };
-
-    video.onerror = () => {
-      status.textContent =
-        "Could not load video. Check the link and hosting permissions.";
-    };
-
-  } catch (error) {
-    status.textContent =
-      "Please enter a valid video URL.";
+    return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
+  } catch {
+    return null;
   }
 }
 
-function previewClip() {
-  const start = Number(
-    document.getElementById("startTime").value
-  );
+function loadDirectVideo(url) {
+  videoKind = "direct";
+  createVideoElement();
+  video.crossOrigin = "anonymous";
+  video.src = url;
+  video.load();
+  setMessage("videoStatus", "Loading direct video link...");
+}
 
-  const end = Number(
-    document.getElementById("endTime").value
-  );
-
-  const status = document.getElementById("clipStatus");
-
-  if (!video.src || !Number.isFinite(video.duration)) {
-    status.textContent = "Load a video first.";
+function loadUploadedFile(file) {
+  if (!file || !file.type.startsWith("video/")) {
+    setMessage("videoStatus", "Please choose a valid video file.", "bad");
     return;
   }
 
-  if (start < 0 || end <= start || end > video.duration) {
-    status.textContent = "Please enter valid clip times.";
+  if (videoUrlObject) URL.revokeObjectURL(videoUrlObject);
+
+  videoUrlObject = URL.createObjectURL(file);
+  videoKind = "upload";
+
+  createVideoElement();
+  video.src = videoUrlObject;
+  video.load();
+
+  setMessage("videoStatus", "Loading your uploaded video...");
+}
+
+$("videoFile").addEventListener("change", event => {
+  const file = event.target.files[0];
+  if (file) loadUploadedFile(file);
+});
+
+$("loadButton").addEventListener("click", () => {
+  const value = $("videoUrl").value.trim();
+
+  if (!value) {
+    setMessage("videoStatus", "Paste a video link first.", "bad");
     return;
   }
 
-  video.currentTime = start;
-  video.play();
+  let parsed;
+  try {
+    parsed = new URL(value);
+    if (!["http:", "https:"].includes(parsed.protocol)) throw Error();
+  } catch {
+    setMessage("videoStatus", "Enter a valid HTTP or HTTPS link.", "bad");
+    return;
+  }
 
-  status.textContent =
-    "Previewing clip: " + start + "s to " + end + "s.";
+  const youtubeId = getYouTubeId(value);
 
-  const stopAtEnd = () => {
-    if (video.currentTime >= end) {
-      video.pause();
-      video.removeEventListener("timeupdate", stopAtEnd);
-    }
-  };
+  if (youtubeId) {
+    showYouTubePreview(youtubeId);
+    return;
+  }
 
-  video.addEventListener("timeupdate", stopAtEnd);
+  if (!parsed.pathname.toLowerCase().endsWith(".mp4")) {
+    setMessage(
+      "videoStatus",
+      "Use a YouTube link for preview or a direct MP4 link for video loading.",
+      "bad"
+    );
+    return;
+  }
+
+  loadDirectVideo(parsed.href);
+});
+
+$("previewClipButton").addEventListener("click", async () => {
+  if (!video || !Number.isFinite(video.duration)) {
+    setMessage("clipStatus", "Load a video file before trimming.", "bad");
+    return;
+  }
+
+  const start = Number($("startTime").value);
+  const end = Number($("endTime").value);
+
+  if (
+    !Number.isFinite(start) ||
+    !Number.isFinite(end) ||
+    start < 0 ||
+    end <= start ||
+    end > video.duration
+  ) {
+    setMessage("clipStatus", "Enter valid start and end times.", "bad");
+    return;
+  }
+
+  try {
+    video.currentTime = start;
+    await video.play();
+
+    setMessage(
+      "clipStatus",
+      "Playing selected clip from " + start + "s to " + end + "s.",
+      "good"
+    );
+
+    const stopAtEnd = () => {
+      if (video && video.currentTime >= end) {
+        video.pause();
+        video.removeEventListener("timeupdate", stopAtEnd);
+      }
+    };
+
+    video.addEventListener("timeupdate", stopAtEnd);
+  } catch {
+    setMessage("clipStatus", "Tap play on the video player to begin.", "bad");
+  }
+});
+
+function updateCaptionAppearance() {
+  const preview = $("captionPreview");
+  preview.style.color = $("captionColor").value;
+  preview.style.fontSize = $("captionSize").value + "px";
+}
+
+$("captionColor").addEventListener("input", updateCaptionAppearance);
+$("captionSize").addEventListener("input", updateCaptionAppearance);
+
+function updateVideoCaption(words) {
+  if (!video) return;
+
+  let overlay = videoBox.querySelector(".caption-overlay");
+
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "caption-overlay";
+    videoBox.appendChild(overlay);
+  }
+
+  overlay.className =
+    "caption-overlay " + $("captionPosition").value;
+  overlay.style.color = $("captionColor").value;
+  overlay.style.fontSize = $("captionSize").value + "px";
+  overlay.textContent = words.join(" ");
 }
 
 function animateCaptions() {
-  const text = document.getElementById("captionText").value.trim();
-  const output = document.getElementById("captionOutput");
+  stopCaptionAnimation();
 
-  const color = document.getElementById("captionColor").value;
+  const text = $("captionText").value.trim();
 
   if (!text) {
-    output.textContent = "ENTER YOUR CAPTIONS";
+    setMessage("captionStatus", "Type your caption first.", "bad");
     return;
   }
 
-  const words = text.split(/\s+/);
-  output.innerHTML = "";
+  captionWords = text.split(/\s+/);
+  captionIndex = 0;
 
-  let index = 0;
+  const preview = $("captionPreview");
+  preview.textContent = "";
+  updateCaptionAppearance();
 
   function nextWord() {
-    if (index >= words.length) return;
+    if (captionIndex >= captionWords.length) {
+      setMessage("captionStatus", "Caption animation complete.", "good");
+      return;
+    }
 
-    const span = document.createElement("span");
-    span.textContent = words[index];
-    span.style.color = color;
+    const word = captionWords[captionIndex];
+    captionIndex++;
 
-    output.appendChild(span);
-    index++;
+    preview.textContent += (preview.textContent ? " " : "") + word;
 
-    setTimeout(nextWord, 350);
+    updateVideoCaption(captionWords.slice(0, captionIndex));
+
+    captionTimer = setTimeout(nextWord, 350);
   }
 
+  setMessage("captionStatus", "Animating captions...", "good");
   nextWord();
 }
-</script>
 
+$("animateButton").addEventListener("click", animateCaptions);
+
+$("stopCaptionButton").addEventListener("click", () => {
+  stopCaptionAnimation();
+  setMessage("captionStatus", "Caption animation stopped.");
+});
+
+function drawCaption(ctx, width, height, words, time) {
+  if (!words.length) return;
+
+  const position = $("captionPosition").value;
+  const fontSize = Number($("captionSize").value);
+  const color = $("captionColor").value;
+
+  const elapsedWords = Math.floor(time * 2.85);
+  const visibleWords = words.slice(
+    0,
+    Math.min(words.length, Math.max(0, elapsedWords + 1))
+  );
+
+  if (!visibleWords.length) return;
+
+  const text = visibleWords.join(" ").toUpperCase();
+
+  ctx.save();
+  ctx.font = "900 " + fontSize + "px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const x = width / 2;
+  let y = height * .82;
+
+  if (position === "top") y = height * .17;
+  if (position === "middle") y = height * .5;
+
+  ctx.lineWidth = Math.max(3, fontSize / 8);
+  ctx.strokeStyle = "#000000";
+  ctx.fillStyle = color;
+  ctx.lineJoin = "round";
+
+  const maxWidth = width * .9;
+  const lines = [];
+  let current = "";
+
+  for (const word of text.split(" ")) {
+    const test = current ? current + " " + word : word;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+
+  if (current) lines.push(current);
+
+  const lineHeight = fontSize * 1.25;
+  const firstY = y - ((lines.length - 1) * lineHeight) / 2;
+
+  lines.forEach((line, index) => {
+    const lineY = firstY + index * lineHeight;
+    ctx.strokeText(line, x, lineY, maxWidth);
+    ctx.fillText(line, x, lineY, maxWidth);
+  });
+
+  ctx.restore();
+}
+
+function chooseRecorderType() {
+  const options = [
+    "video/webm;codecs=vp9,opus",
+    "video/webm;codecs=vp8,opus",
+    "video/webm"
+  ];
+
+  return options.find(type =>
+    MediaRecorder.isTypeSupported(type)
+  ) || "";
+}
+
+async function exportClip() {
+  if (exporting) return;
+
+  if (!video || !Number.isFinite(video.duration)) {
+    setMessage("exportStatus", "Upload a video before exporting.", "bad");
+    return;
+  }
+
+  if (videoKind === "youtube") {
+    setMessage(
+      "exportStatus",
+      "YouTube preview cannot be exported. Upload a video you have permission to edit.",
+      "bad"
+    );
+    return;
+  }
+
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+    setMessage(
+      "exportStatus",
+      "Your browser does not support video export. Try a recent version of Chrome.",
+      "bad"
+    );
+    return;
+  }
+
+  const start = Number($("startTime").value);
+  const end = Number($("endTime").value);
+
+  if (
+    !Number.isFinite(start) ||
+    !Number.isFinite(end) ||
+    start < 0 ||
+    end <= start ||
+    end > video.duration
+  ) {
+    setMessage("exportStatus", "Your clip times are not valid.", "bad");
+    return;
+  }
+
+  const words = $("captionText").value.trim().split(/\s+/).filter(Boolean);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth || 1280;
+  canvas.height = video.videoHeight || 720;
+
+  const ctx = canvas.getContext("2d");
+  const stream = canvas.captureStream(30);
+
+  let audioStream = null;
+
+  try {
+    if (typeof video.captureStream === "function") {
+      audioStream = video.captureStream();
+
+      audioStream.getAudioTracks().forEach(track => {
+        stream.addTrack(track);
+      });
+    }
+  } catch (error) {
+    console.warn("Audio capture unavailable", error);
+  }
+
+  const mimeType = chooseRecorderType();
+
+  if (!mimeType) {
+    setMessage("exportStatus", "No supported WebM recording format was found.", "bad");
+    return;
+  }
+
+  const chunks = [];
+  let recorder;
+
+  try {
+    recorder = new MediaRecorder(stream, { mimeType });
+  } catch {
+    setMessage("exportStatus", "Could not start the video recorder.", "bad");
+    return;
+  }
+
+  exporting = true;
+  $("exportButton").disabled = true;
+  $("progressBar").style.width = "0%";
+  setMessage("exportStatus", "Preparing your video export...");
+
+  recorder.ondataavailable = event => {
+    if (event.data && event.data.size > 0) chunks.push(event.data);
+  };
+
+  recorder.onerror = () => {
+    exporting = false;
+    $("exportButton").disabled = false;
+    setMessage("exportStatus", "An error interrupted the export.", "bad");
+    stream.getTracks().forEach(track => track.stop());
+  };
+
+  recorder.onstop = () => {
+    stream.getTracks().forEach(track => track.stop());
+
+    if (audioStream) {
+      audioStream.getTracks().forEach(track => track.stop());
+    }
+
+    exporting = false;
+    $("exportButton").disabled = false;
+
+    if (!chunks.length) {
+      setMessage("exportStatus", "No video data was recorded.", "bad");
+      return;
+    }
+
+    const blob = new Blob(chunks, { type: mimeType });
+    const downloadUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.download = "cassius-clipstudio-export.webm";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
+
+    $("progressBar").style.width = "100%";
+    setMessage(
+      "exportStatus",
+      "Export finished. Your WebM video download should now be available.",
+      "good"
+    );
+  };
+
+  const drawFrame = () => {
+    if (!exporting) return;
+
+    const currentTime = video.currentTime;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, width, height);
+
+    try {
+      ctx.drawImage(video, 0, 0, width, height);
+    } catch (error) {
+      recorder.stop();
+      setMessage(
+        "exportStatus",
+        "The browser could not draw this video. Try uploading the original video file.",
+        "bad"
+      );
+      return;
+    }
+
+    drawCaption(ctx, width, height, words, currentTime - start);
+
+    const progress = Math.max(
+      0,
+      Math.min(100, ((currentTime - start) / (end - start)) * 100)
+    );
+
+    $("progressBar").style.width = progress + "%";
+
+    if (currentTime >= end || video.ended) {
+      video.pause();
+      if (recorder.state !== "inactive") recorder.stop();
+      return;
+    }
+
+    requestAnimationFrame(drawFrame);
+  };
+
+  try {
+    video.pause();
+    video.currentTime = start;
+
+    await new Promise(resolve => {
+      const ready = () => {
+        video.removeEventListener("seeked", ready);
+        resolve();
+      };
+      video.addEventListener("seeked", ready, { once: true });
+      video.currentTime = start;
+    });
+
+    recorder.start(250);
+    await video.play();
+    requestAnimationFrame(drawFrame);
+
+    setMessage(
+      "exportStatus",
+      "Recording your selected clip. Keep this page open until it finishes.",
+      "good"
+    );
+  } catch (error) {
+    if (recorder.state !== "inactive") recorder.stop();
+    exporting = false;
+    $("exportButton").disabled = false;
+    setMessage(
+      "exportStatus",
+      "Could not start export. Check that the video can play in this browser.",
+      "bad"
+    );
+  }
+}
+
+$("exportButton").addEventListener("click", exportClip);
+
+updateCaptionAppearance();
+</script>
 </body>
 </html>
